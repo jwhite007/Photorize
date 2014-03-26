@@ -1,0 +1,40 @@
+{% extends 'photorizer/base.html' %}
+
+{% block content %}
+<div>
+    <p> {{ user.username }} </p>
+    <div class="container">
+        <h1>Albums List</h1>
+        <hr />
+        <table border="2">
+            <tr>
+                <th>Albums:</th>
+                <th>Date Added:</th>
+            </tr>
+            {% for album in albums %}
+            <tr>
+                <td>&nbsp;{{ album.name }}&nbsp;</td>
+                <td>&nbsp;{{ album.created }}&nbsp;</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="container">
+        <h1>Photos List</h1>
+        <hr />
+        <table border="2">
+            <tr>
+                <th>Photos:</th>
+                <th>Date Added:</th>
+            </tr>
+            {% for photo in photos %}
+            <tr>
+                <td>&nbsp;{{ photo.name }}&nbsp;</td>
+                <td>&nbsp;{{ photo.created }}&nbsp;</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {# <a><img src="{{ STATIC_URL }}{{ photo.image }}"></a> #}
+</div>
+{% endblock %}

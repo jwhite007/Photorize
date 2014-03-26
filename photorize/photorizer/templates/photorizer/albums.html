@@ -1,0 +1,21 @@
+{% extends 'photorizer/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Albums List</h1>
+    <hr />
+    <table border="2">
+        <tr>
+            <th>Albums:</th>
+            <th>Date Added:</th>
+        </tr>
+        {% for album in albums %}
+        <tr>
+            <td>&nbsp;{{ album.name }}&nbsp;</td>
+            <td>&nbsp;{{ album.created }}&nbsp;</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
