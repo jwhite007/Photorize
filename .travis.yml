@@ -8,6 +8,6 @@ env:
   - Django==1.6 DB=postgres
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
-  - cd photorize
+  # - cd photorize
 # command to run tests
-script: python manage.py test
+script: cd photorize; python manage.py test
