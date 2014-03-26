@@ -4,10 +4,13 @@ python:
 # command to install dependencies
 install:
   - "pip install -r requirements.txt"
+services:
+  - postgresql
 env:
   - Django==1.6 DB=postgres
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -U postgres -c "CREATE USER photorizer WITH PASSWORD 'photorize' SUPERUSER;"
+  - creatdb photorizedb
   # - cd photorize
 # command to run tests
 script: cd photorize; python manage.py test
