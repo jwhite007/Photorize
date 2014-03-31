@@ -13,4 +13,4 @@ before_script:
   - createdb photorizedb
   # - cd photorize
 # command to run tests
-script: cd photorize; python manage.py --settings=settings.ghver test
+script: cd photorize; python manage.py --settings=settings_ghver test
