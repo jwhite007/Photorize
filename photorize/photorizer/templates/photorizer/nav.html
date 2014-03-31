@@ -1,19 +1,24 @@
-{% url 'photos' as photos %}
-{% url 'albums' as albums %}
-{% url 'homepage' as main %}
-
-<header>
-    <div>
-        <nav>
-            <ul>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="badge">Photorizer</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
                 <li>
-                    <a href="{{ main }}">HOME</a>
+                    <a href="{% url 'photorizer.views.main_view' %}">HOME</a>
                 </li>
                 <li>
-                    <a href="{{ photos }}">PHOTOS</a>
+                    <a href="/accounts/register/">REGISTER</a>
                 </li>
-                <li><a href="{{ albums }}"</li>ALBUMS</a>
+                <li>
+                    <a href="{% url 'login' %}">LOGIN</a>
+                </li>
+                <li>
+                    <a href="{% url 'logout' %}">LOGOUT</a>
+                </li>
             </ul>
-        </nav>
+        </div>
     </div>
-</header>
+</nav>
+

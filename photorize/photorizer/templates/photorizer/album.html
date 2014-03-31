@@ -1,10 +1,11 @@
 {% extends 'photorizer/base.html' %}
 
 {% block content %}
+<h1>{{ album }}</h1>
 <div>
-    {% for photo in photos %}
-        <p> {{ photo.name }} </p>
-        <a><img src="{{ STATIC_URL }}{{ photo.image }}"></a>
+    {% for photo in album.photos.all %}
+        <p> {{ photo.image }} </p>
+        <a><img src="{{ photo.image.url }}"></a>
     {% endfor %}
 </div>
 {% endblock %}

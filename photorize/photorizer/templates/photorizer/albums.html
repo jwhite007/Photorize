@@ -1,21 +1,20 @@
 {% extends 'photorizer/base.html' %}
+{# {% url 'album' as albumpage %}
+{% url 'homepage' as main %} #}
 
 {% block content %}
 <div class="container">
     <h1>Albums List</h1>
     <hr />
-    <table border="2">
-        <tr>
-            <th>Albums:</th>
-            <th>Date Added:</th>
-        </tr>
-        {% for album in albums %}
-        <tr>
-            <td>&nbsp;{{ album.name }}&nbsp;</td>
-            <td>&nbsp;{{ album.created }}&nbsp;</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div>
+            <ul class="albums list">
+                {% for album in albums %}
+                <li>
+                    <a href="{% url 'photorizer.views.album_view' album.pk %}">{{ album }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+    </div>
 </div>
 
 {% endblock %}

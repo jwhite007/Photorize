@@ -1,20 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# class User(models.Model):
-
-#     first_name = models.CharField(max_length=20)
-#     last_name = models.CharField(max_length=20)
-#     eddress = models.CharField(max_length=30)
-#     timestamp = models.DateTimeField(auto_now_add=True, blank=False)
-
-#     def __unicode__(self):
-#         return self.first_name
-        # return self.last_name
-        # return self.eddress
-        # return self.timestamp
-
-
 # class PublicAlbumsManager(models.Manager):
 
 #     def get_queryset(self):
@@ -27,9 +13,6 @@ class Tag(models.Model):
     """docstring for Tag"""
     name = models.CharField(max_length=50)
 
-    # def __init__(self, name):
-    #     super(Tag, self).__init__()
-    #     self.name = name
     def __unicode__(self):
         return u'%s ' % (self.name)
 
@@ -41,7 +24,11 @@ class Photo(models.Model):
         related_name='photos',
         related_query_name='photo',
     )
-    image = models.ImageField(upload_to='images')
+    height = models.IntegerField(blank=True, null=True, default=0)
+    width = models.IntegerField(blank=True, null=True, default=0)
+    image = models.ImageField(upload_to='images',
+                              height_field='height',
+                              width_field='width')
     name = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -51,13 +38,16 @@ class Photo(models.Model):
         blank=True,
     )
 
-    # def __init__(self, image, caption, tag):
-    #     super(Photo, self).__init__()
-    #     self.image = image
-    #     self.caption = caption
-    #     self.modified
     def __unicode__(self):
         return u'%s ' % (self.name)
+
+    def owner_name(self):
+        raw_name = "%s %s" % (self.owner.first_name,
+                              self.owner.last_name)
+        name = raw_name.strip()
+        if not name:
+            name = self.owner.username
+        return name
 
 
 class Album(models.Model):
@@ -77,7 +67,3 @@ class Album(models.Model):
 
     def __unicode__(self):
         return u'%s ' % (self.name)
-
-    # def __init__(self, name):
-    #     super(Album, self).__init__()
-    #     self.name = name
