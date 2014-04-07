@@ -1,11 +1,13 @@
 {% extends 'photorizer/base.html' %}
-
+{% load thumbnail %}
 {% block content %}
-<h1>{{ album }}</h1>
 <div>
     {% for photo in album.photos.all %}
-        <p> {{ photo.image }} </p>
-        <a><img src="{{ photo.image.url }}"></a>
+    <a>
+            {% thumbnail photo.image "150x150" crop="center" as im %}
+            <a href="{% url 'photorizer.views.photo_view' photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
+    </a>
     {% endfor %}
 </div>
 {% endblock %}

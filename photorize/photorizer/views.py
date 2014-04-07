@@ -10,7 +10,7 @@ from django.template import RequestContext, loader
 from django.contrib.auth.models import User
 from forms import LoginForm, RegisterForm
 from django.contrib.auth import authenticate, login
-# Create your views here.
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 def main_view(request):
@@ -29,51 +29,16 @@ def main_view(request):
         login_form = LoginForm()
         context = {'form': login_form}
         return render(request, 'registration/login.html', context)
-    # msg = 'This is the main page'
-    # # form = LoginForm()
-    # return render_to_response('photorizer/main.html',
-    #                           {'msg': msg, })
 
 
-# def register(request):
-#     # msg = 'This is the registration page'
-#     # return render_to_response('registration/registration_form.html', {'msg': msg})
-#     form = RegisterForm
-#     if request.method == 'GET':
-#         return render_to_response('registration/registration_form.html', {'form': form})
-
-# def login_view(request):
-#     form = LoginForm()
-#     if request.method == 'GET':
-#         return render_to_response('registration/login.html', {'form': form})
-#     if request.method == 'POST':
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(username=username, password=password)
-#         if user is not None:
-#             if user.is_active:
-#                 login(request, user)
-#                 redirect('main.html')
-
-
-# def logout_view(request):
-#     msg = 'This is the Logout page'
-#     return HttpResponse('This is the Logout page')
-#     # return render_to_response({'msg': msg})
-#     template = loader.get_template('registration/logout.html')
-#     context = RequestContext(request, {'msg': msg})
-#     body = template.render(context)
-#     return HttpResponse(body, content_type="text/html")
-
-
+@login_required
 def photo_view(request, photo):
     # user1 = User.objects.get(id=user)
-    print(photo)
+    back = request.META.get('HTTP_REFERER')
     photo = Photo.objects.get(id=photo)
-    print(photo)
     template = loader.get_template('photorizer/photo.html')
     context = RequestContext(request, {
-        'photo': photo,
+        'photo': photo, 'back': back
     })
     body = template.render(context)
     return HttpResponse(body, content_type="text/html")
@@ -82,11 +47,19 @@ def photo_view(request, photo):
 #     pass
 
 
+@login_required
+# @permission_required
 def album_view(request, album_id):
-    # print "album is " + album
     album = Album.objects.select_related('photos').get(pk=album_id)
     context = {'album': album}
     return render(request, 'photorizer/album.html', context)
+
+
+# @login_required
+# def album_view(request, owner, album_id):
+#     album = Album.objects.select_related('photos').get(pk=album_id)
+#     context = {'album': album}
+#     return render(request, 'photorizer/album.html', context)
     # user1 = User.objects.get(id=user)
     # print(user1.username)
     # album = Album.objects.get(id=1)

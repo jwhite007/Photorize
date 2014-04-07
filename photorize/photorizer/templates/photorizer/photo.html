@@ -3,6 +3,7 @@
 {% block content %}
 <div>
     <p> {{ photo.name }} </p>
-    <a><img src="{{  photo.image.url }}"></a>
+    <a href="{{ back }}"><img src="{{  photo.image.url }}"></a>
+    <p> {{ photo.caption }} </p>
 </div>
 {% endblock %}
