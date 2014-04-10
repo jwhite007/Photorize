@@ -1,0 +1,16 @@
+{% extends 'photorizer/base.html' %}
+{% load thumbnail %}
+{% block content %}
+<div>
+    <a href="{% url 'photorizer.views.add_photo_view' %}"><button type="button" class="btn btn-primary">Add Photo</button></a>
+</div>
+<div>
+    {% for photo in photos %}
+    <a>
+            {% thumbnail photo.image "150x150" crop="center" as im %}
+            <a href="{% url 'photorizer.views.photo_view' photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

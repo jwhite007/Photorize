@@ -1,0 +1,88 @@
+{% extends 'photorizer/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Albums List</h1>
+    <hr />
+    <table border="2">
+        <tr>
+            <th>Albums:</th>
+            <th>Date Added:</th>
+        </tr>
+        {% for album in albums %}
+        <tr>
+            <td>&nbsp;{{ album.name }}&nbsp;</td>
+            <td>&nbsp;{{ album.created }}&nbsp;</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
+
+
+{# alternative #}
+{% extends 'photorizer/base.html' %}
+
+{% block content %}
+<div>
+    {% for photo in photos %}
+        <p> {{ photo.name }} </p>
+        <a><img src="{{ photo.image.url }}"></a>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{# alternative #}
+{% extends 'photorizer/base.html' %}
+{% load thumbnail %}
+{% block content %}
+<div>
+    {% for photo in album.photos.all %}
+    <a>
+            {% thumbnail photo.image "150x150" crop="center" as im %}
+                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <p><h1>Albums List</h1>
+    <hr />
+    <a href="{% url 'photorizer.views.create_album_view' %}"><button type="button" class="btn btn-primary">Add Album</button></a></p>
+    <div>
+            <ul class="albums list">
+                {% for album in albums %}
+                <li>
+                    <a href="{% url 'photorizer.views.album_view' album.pk %}">{{ album }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p><h1>Albums List</h1>
+    <hr />
+    <a href="{% url 'photorizer.views.create_album_view' %}"><button type="button" class="btn btn-primary">Add Album</button></a></p>
+    <div>
+            <ul class="albums list">
+                {% for album in albums %}
+                <li>
+                    <a href="{% url 'photorizer.views.album_view' album.pk %}">{{ album }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+<div style="max-width:250px;margin-left:auto;margin-right:auto;">

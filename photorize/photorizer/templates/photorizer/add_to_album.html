@@ -1,0 +1,17 @@
+{% extends 'photorizer/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block content %}
+<h1>Add to Albums</h1>
+<form action="{% url 'photorizer.views.add_photo_to_album_view' photo.pk %}" method="post" class="form">
+{% csrf_token %}
+{% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "picture" %} Add
+        </button>
+    {% endbuttons %}
+</form>
+
+{% endblock %}
