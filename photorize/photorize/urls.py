@@ -10,6 +10,6 @@ urlpatterns = patterns('',
                        url(r'^', include('photorizer.urls')),
                        url(r'^accounts/',
                            include('registration.backends.default.urls')),
-                       )
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                       ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG:
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
