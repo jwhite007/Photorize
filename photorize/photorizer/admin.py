@@ -6,6 +6,7 @@ from photorizer.models import Photo, Album, Tag
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'owner_link', 'created', 'modified',
                     )
+    list_filter = ('owner', 'created', 'modified',)
 
     def owner_link(self, photo):
         url = reverse('admin:auth_user_change', args=(photo.owner.id,))
@@ -19,6 +20,8 @@ class PhotoAdmin(admin.ModelAdmin):
 class AlbumAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'owner_link', 'created', 'modified',
                     )
+
+    list_filter = ('owner', 'created', 'modified',)
 
     def owner_link(self, album):
         url = reverse('admin:auth_user_change', args=(album.owner.id,))
