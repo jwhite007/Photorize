@@ -20,7 +20,8 @@
   {% for album in albums %}
     <tr>
       <td><a href="{% url 'photorizer.views.album_view' album.pk %}">{{ album }}</a></td>
-      <td><a href="{% url 'photorizer.views.delete_album_view' album.pk %}"><button type="button" class="btn btn-success btn-xs">Delete Album</button></a>
+      <td><a href="{% url 'photorizer.views.delete_album_view' album.pk %}"><button type="button" class="btn btn-success btn-xs">Delete Album</button></a></td>
+      <td><a href="{% url 'photorizer.views.edit_album_view' album.pk %}"><button type="button" class="btn btn-success btn-xs">Change Album Name</button></a></td>
     </tr>
   {% endfor %}
   </tbody>

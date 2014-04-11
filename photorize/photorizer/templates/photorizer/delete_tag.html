@@ -1,0 +1,17 @@
+{% extends 'photorizer/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block content %}
+<h1>Remove a Tag</h1>
+<form action="{% url 'photorizer.views.delete_tag_view' %}" method="post" class="form">
+{% csrf_token %}
+{% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "picture" %} Delete Tag
+        </button>
+    {% endbuttons %}
+</form>
+
+{% endblock %}

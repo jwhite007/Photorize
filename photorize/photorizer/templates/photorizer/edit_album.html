@@ -1,0 +1,18 @@
+{% extends 'photorizer/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block content %}
+<h1>Change Album Name</h1>
+<div style="max-width:250px;margin-left:auto;margin-right:auto;">
+    <form action="{% url 'photorizer.views.edit_album_view' album.pk %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">
+                {% bootstrap_icon "star" %} Change Name
+            </button>
+        {% endbuttons %}
+    </form>
+</div>
+{% endblock %}

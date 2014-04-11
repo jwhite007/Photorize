@@ -11,6 +11,7 @@
     <a href="{% url 'photorizer.views.delete_photo_view' photo.pk %}"><button type="button" class="btn btn-success btn-xs">Delete Photo</button></a>
     <a href="{% url 'photorizer.views.add_photo_to_album_view' photo.pk %}"><button type="button" class="btn btn-primary btn-xs">Add Photo to an Album</button></a>
     <a href="{% url 'photorizer.views.remove_photo_from_album_view' photo.pk %}"><button type="button" class="btn btn-primary btn-xs">Remove Photo from an Album</button></a>
+    <a href="{% url 'photorizer.views.edit_photo_view' photo.pk %}"><button type="button" class="btn btn-primary btn-xs">Edit Photo</button></a>
     </p>
     <p><a href="{{ back }}"><img src="{{  photo.image.url }}"></a></p>
 </div>

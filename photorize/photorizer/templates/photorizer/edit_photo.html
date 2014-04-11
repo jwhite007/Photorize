@@ -1,0 +1,17 @@
+{% extends 'photorizer/base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block content %}
+<h1>Edit Photo</h1>
+<form action="{% url 'photorizer.views.edit_photo_view' photo.pk %}" method="post" class="form">
+{% csrf_token %}
+{% bootstrap_form form %}
+    {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            {% bootstrap_icon "picture" %} Save
+        </button>
+    {% endbuttons %}
+</form>
+
+{% endblock %}
