@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from registration.signals import user_activated
+from django.dispatch import receiver
 
 # class PublicAlbumsManager(models.Manager):
 
@@ -67,3 +69,10 @@ class Album(models.Model):
 
     def __unicode__(self):
         return u'%s ' % (self.name)
+
+
+@receiver(user_activated)
+def add_to_active(sender, **kwargs):
+    auths = Group.objects.get(name='Active')
+    auths.user_set.add(kwargs['user'])
+

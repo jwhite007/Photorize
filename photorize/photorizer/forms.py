@@ -31,6 +31,20 @@ class PhotoForm(ModelForm):
             'image', 'name', 'caption', 'tags']
 
 
+# class EditPhotoForm(forms.Form):
+#     name = forms.CharField(max_length=50)
+#     caption = forms.CharField(max_length=150)
+#     tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
+#                                             widget=forms.CheckboxSelectMultiple())
+
+
+class EditPhotoForm(ModelForm):
+    class Meta:
+        model = Photo
+        fields = [
+            'name', 'caption', 'tags']
+
+
 class CreateTagForm(forms.Form):
     name = forms.CharField(max_length=50)
 
@@ -42,4 +56,9 @@ class AddtoAlbumForm(forms.Form):
 
 class RemoveFromAlbumForm(forms.Form):
     albums = forms.ModelMultipleChoiceField(queryset=Album.objects.all(),
+                                            widget=forms.CheckboxSelectMultiple())
+
+
+class DeleteTagForm(forms.Form):
+    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
                                             widget=forms.CheckboxSelectMultiple())
