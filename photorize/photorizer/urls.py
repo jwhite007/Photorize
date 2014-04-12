@@ -26,6 +26,8 @@ urlpatterns = patterns('photorizer.views',  # prefix allows you to refer to view
                        url(r'^photo/(\d+)/edit/$',
                            'edit_photo_view', name='edit_photo'),
                        url(r'^photo/add/$', 'add_photo_view', name="add_photo"),
+                       url(r'^tags/$', 'tags_view', name="tags"),
+                       url(r'^tag/(\d+)/$', 'tag_view', name='tag'),
                        )
 urlpatterns += patterns('django.contrib.auth.views',
                         url(r'^login/$', 'login', {'template_name':
