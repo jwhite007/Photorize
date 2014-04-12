@@ -3,13 +3,13 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% block content %}
-<h1>Add Tag</h1>
+<h1>Add Category</h1>
 <form action="{% url 'photorizer.views.add_tag_view' %}" method="post" class="form">
 {% csrf_token %}
 {% bootstrap_form form %}
     {% buttons %}
         <button type="submit" class="btn btn-primary">
-            {% bootstrap_icon "picture" %} Save
+            {% bootstrap_icon "picture" %} Add
         </button>
     {% endbuttons %}
 </form>

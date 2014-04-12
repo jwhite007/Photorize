@@ -2,9 +2,9 @@
 
 {% block content %}
 <div>
-    <p> {{ photo.name }} </p>
-    <p> {{ photo.caption }} </p>
-    <p> {% for tag in photo.tags.all %}
+    <p> Name: {{ photo.name }} </p>
+    <p> Caption: {{ photo.caption }} </p>
+    <p> Tags: {% for tag in photo.tags.all %}
         {{ tag.name }}
         {% endfor %}</p>
     <p>

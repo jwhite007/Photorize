@@ -3,8 +3,6 @@
 {% block content %}
 <div>
     <a href="{% url 'photorizer.views.add_photo_view' %}"><button type="button" class="btn btn-primary">Add Photo</button></a>
-    <a href="{% url 'photorizer.views.add_tag_view' %}"><button type="button" class="btn btn-primary">Add Tag</button></a>
-    <a href="{% url 'photorizer.views.delete_tag_view' %}"><button type="button" class="btn btn-primary">Delete Tag</button></a>
 </div>
 <div>
     {% for photo in photos %}

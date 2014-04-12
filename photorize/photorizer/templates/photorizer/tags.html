@@ -1,9 +1,8 @@
 {% extends 'photorizer/base.html' %}
 {% load thumbnail %}
 {% block content %}
-<h1>Album: {{ album.name }}</h1>
 <div>
-    {% for photo in album.photos.all %}
+    {% for photo in photos %}
     <a>
             {% thumbnail photo.image "150x150" crop="center" as im %}
             <a href="{% url 'photorizer.views.photo_view' photo.pk %}"><img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
