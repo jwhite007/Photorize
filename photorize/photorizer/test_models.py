@@ -37,11 +37,11 @@ class PhotoTest(TestCase):
         self.user.save()
         self.photo = Photo(owner=self.user,
                            image='images/test.png',
-                           name='Bocci Ball Reflection',
-                           caption='Photo taken in Prague, CZ.')
+                           name='test',
+                           caption='testing')
         self.photo.clean()
         self.photo.save()
-        self.tag = Tag(name='Travel')
+        self.tag = Tag(name='test tag')
         self.tag.clean()
         self.tag.save()
         self.photo.tags.add(self.tag)
@@ -56,17 +56,17 @@ class PhotoTest(TestCase):
         self.assertEqual(self.photo.image, 'images/test.png')
 
     def test_name_entry(self):
-        self.assertEqual(self.photo.name, 'Bocci Ball Reflection')
+        self.assertEqual(self.photo.name, 'test')
 
     def test_caption_entry(self):
-        self.assertEqual(self.photo.caption, 'Photo taken in Prague, CZ.')
+        self.assertEqual(self.photo.caption, 'testing')
 
     def test_tag_creation(self):
-        self.assertEqual(self.tag.name, 'Travel')
+        self.assertEqual(self.tag.name, 'test tag')
 
     def test_photo_tag_association(self):
         tags = Tag.objects.filter(photo=self.photo.id)
-        self.assertEqual(tags[0].name, 'Travel')
+        self.assertEqual(tags[0].name, 'test tag')
 
 
 class AlbumTest(TestCase):
@@ -78,16 +78,16 @@ class AlbumTest(TestCase):
         self.user.save()
         self.photo = Photo(owner=self.user,
                            image='images/test.png',
-                           name='Bocci Ball Reflection',
-                           caption='Photo taken in Prague, CZ.')
+                           name='test',
+                           caption='testing')
         self.photo.clean()
         self.photo.save()
-        self.tag = Tag(name='Travel')
+        self.tag = Tag(name='test tag')
         self.tag.clean()
         self.tag.save()
         self.photo.tags.add(self.tag)
         self.album = Album(owner=self.user,
-                           name='Czech Republic')
+                           name='test album')
         self.album.clean()
         self.album.save()
         self.album.photos.add(self.photo)
@@ -96,11 +96,11 @@ class AlbumTest(TestCase):
         self.assertIsNotNone(self.album.id)
 
     def test_owner_entry(self):
-        self.assertEqual(self.album.name, 'Czech Republic')
+        self.assertEqual(self.album.name, 'test album')
 
     def test_name_entry(self):
-        self.assertEqual(self.photo.name, 'Bocci Ball Reflection')
+        self.assertEqual(self.photo.name, 'test')
 
     def test_album_to_photo_association(self):
         photos = Photo.objects.filter(album=self.album.id)
-        self.assertEqual(photos[0].name, 'Bocci Ball Reflection')
+        self.assertEqual(photos[0].name, 'test')
