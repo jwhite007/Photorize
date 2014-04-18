@@ -36,7 +36,7 @@ class PhotoTest(TestCase):
         self.user.full_clean()
         self.user.save()
         self.photo = Photo(owner=self.user,
-                           image='images/wedding3.jpg',
+                           image='images/test.png',
                            name='Bocci Ball Reflection',
                            caption='Photo taken in Prague, CZ.')
         self.photo.clean()
@@ -53,7 +53,7 @@ class PhotoTest(TestCase):
         self.assertEqual(self.photo.owner.username, 'sholmes')
 
     def test_image_entry(self):
-        self.assertEqual(self.photo.image, 'images/wedding3.jpg')
+        self.assertEqual(self.photo.image, 'images/test.png')
 
     def test_name_entry(self):
         self.assertEqual(self.photo.name, 'Bocci Ball Reflection')
@@ -77,7 +77,7 @@ class AlbumTest(TestCase):
         self.user.full_clean()
         self.user.save()
         self.photo = Photo(owner=self.user,
-                           image='images/wedding3.jpg',
+                           image='images/test.png',
                            name='Bocci Ball Reflection',
                            caption='Photo taken in Prague, CZ.')
         self.photo.clean()
