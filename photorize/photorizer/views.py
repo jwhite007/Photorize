@@ -113,7 +113,7 @@ def photo_view(request, photo_id):
         photo = Photo.objects.get(id=photo_id)
         template = loader.get_template('photorizer/photo.html')
         context = RequestContext(request, {
-            'photo': photo, 'back': back
+            'photo': photo, 'back': back,
         })
         body = template.render(context)
         return HttpResponse(body, content_type="text/html")
@@ -125,18 +125,50 @@ def photo_view(request, photo_id):
 @permission_required('photorizer.add_photo', raise_exception=True)
 def add_photo_view(request):
     if request.method == 'POST':
-        photo_form = PhotoForm(request.POST, request.FILES)
-        if photo_form.is_valid():
-            photo = photo_form.save(commit=False)
+        form = PhotoForm(request.POST, request.FILES)
+        if form.is_valid():
+            photo = form.save(commit=False)
             photo.owner = request.user
             photo.save()
-            for tag in photo_form.cleaned_data['tags']:
+            for tag in form.cleaned_data['tags']:
                 photo.tags.add(tag)
             photo.save()
+            if form.cleaned_data['tag']:
+                tag = Tag(name=form.cleaned_data['tag'])
+                tag.save()
+                photo.tags.add(tag)
+                photo.save()
             return HttpResponseRedirect('/photos')
     else:
         form = PhotoForm()
     return render(request, 'photorizer/add_photo.html', {'form': form})
+
+# @login_required
+# @permission_required('photorizer.add_photo', raise_exception=True)
+# def add_photo_view(request):
+#     if request.method == 'POST':
+#         photo_form = PhotoForm(request.POST, request.FILES)
+#         tag_form = CreateTagForm(request.POST)
+#         if photo_form.is_valid():
+#             photo = photo_form.save(commit=False)
+#             photo.owner = request.user
+#             photo.save()
+#             tag_list = []
+#             if tag_form.cleaned_data['name']:
+#                 tag_name = tag_form.cleaned_data['name']
+#                 tag = Tag(name=tag_name)
+#                 tag.save()
+#                 tag_list.append(tag)
+#             for tag in photo_form.cleaned_data['tags']:
+#                 tag_list.append(tag)
+#             for tag in tag_list:
+#                 photo.tags.add(tag)
+#             photo.save()
+#             return HttpResponseRedirect('/photos')
+#     else:
+#         photo_form = PhotoForm()
+#         tag_form = CreateTagForm()
+#     return render(request, 'photorizer/add_photo.html', {'photo_form': photo_form, 'tag_form': tag_form})
 
 
 @login_required
@@ -149,12 +181,54 @@ def edit_photo_view(request, photo_id):
     if photo.owner_id == request.user.id:
         form = EditPhotoForm(request.POST or None, instance=photo)
         if form.is_valid():
-            form.save()
+            photo = form.save()
+            if form.cleaned_data['tag']:
+                tag = Tag(name=form.cleaned_data['tag'])
+                tag.save()
+                photo.tags.add(tag)
+                photo.save()
+            else:
+                form.save()
             return redirect('photorizer.views.photo_view', photo.id)
         return render(request, 'photorizer/edit_photo.html',
                       {'form': form, 'photo': photo})
     else:
         return render(request, 'photorizer/permission_denied.html')
+
+
+# @login_required
+# @permission_required('photorizer.change_photo', raise_exception=True)
+# def edit_photo_view(request, photo_id):
+#     try:
+#         photo = Photo.objects.get(pk=photo_id)
+#     except Photo.DoesNotExist:
+#         raise Http404
+#     if photo.owner_id == request.user.id:
+#         if request.method == 'POST':
+#             edit_photo_form = EditPhotoForm(request.POST or None, instance=photo)
+#             tag_form = CreateTagForm(request.POST, empty_permitted=True)
+#             if edit_photo_form.is_valid():
+#                 photo = edit_photo_form.save(commit=False)
+#                 # if tag_form.has_changed():
+#                 if tag_form.cleaned_data:
+#                 # tag_form.save()
+#                     tag_name = tag_form.cleaned_data['name']
+#                     tag = Tag(name=tag_name)
+#                     tag.save()
+#                     photo.tags.add(tag)
+#                     photo.save()
+#                 else:
+#                     photo.save()
+#                 return redirect('photorizer.views.photo_view', photo.id)
+#         else:
+#             edit_photo_form = EditPhotoForm(instance=photo)
+#             tag_form = CreateTagForm()
+#             # tag_form.empty_permitted = True
+#             return render(request, 'photorizer/edit_photo.html',
+#                           {'edit_photo_form': edit_photo_form,
+#                            'tag_form': tag_form, 'photo': photo})
+#     else:
+#         return render(request, 'photorizer/permission_denied.html')
 
 
 @login_required
@@ -185,8 +259,9 @@ def add_photo_to_album_view(request, photo_id):
             return HttpResponseRedirect('/main')
         else:
             form = AddtoAlbumForm()
+            tag_form = CreateTagForm()
         return render(request, 'photorizer/add_to_album.html',
-                      {'form': form, 'photo': photo})
+                      {'form': form, 'tag_form': tag_form, 'photo': photo})
     else:
         return render(request, 'photorizer/permission_denied.html')
 

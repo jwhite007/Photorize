@@ -21,28 +21,35 @@ class CreateAlbumForm(forms.Form):
 
 
 class PhotoForm(ModelForm):
-    # name = forms.CharField(max_length=50)
-    # tags = forms.ChoiceField()
-    # image = forms.imageField()
+    tag = forms.CharField(max_length=50, required=False, label='Add Category')
 
     class Meta:
         model = Photo
         fields = [
             'image', 'name', 'caption', 'tags']
+        widgets = {
+            'tags':  forms.CheckboxSelectMultiple()
+        }
 
-
-# class EditPhotoForm(forms.Form):
-#     name = forms.CharField(max_length=50)
-#     caption = forms.CharField(max_length=150)
-#     tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
-#                                             widget=forms.CheckboxSelectMultiple())
+    def __init__(self, *args, **kwargs):
+        super(PhotoForm, self).__init__(*args, **kwargs)
+        self.fields['tags'].label = 'Select a Category'
 
 
 class EditPhotoForm(ModelForm):
+    tag = forms.CharField(max_length=50, required=False, label='Add a Category')
+
     class Meta:
         model = Photo
         fields = [
             'name', 'caption', 'tags']
+        widgets = {
+            'tags':  forms.CheckboxSelectMultiple()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(EditPhotoForm, self).__init__(*args, **kwargs)
+        self.fields['tags'].label = 'Select or Deselect a Category'
 
 
 class CreateTagForm(forms.Form):

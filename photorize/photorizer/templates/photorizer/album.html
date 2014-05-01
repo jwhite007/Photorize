@@ -2,6 +2,7 @@
 {% load thumbnail %}
 {% block content %}
 <h1>Album: {{ album.name }}</h1>
+<p>Click on a thumbnail to see full image</p>
 <div>
     {% for photo in album.photos.all %}
     <a>
