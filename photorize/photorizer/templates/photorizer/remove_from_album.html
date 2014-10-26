@@ -3,7 +3,7 @@
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% block content %}
-<h1>Add to Albums</h1>
+<h1>Remove from Albums</h1>
 <form action="{% url 'photorizer.views.remove_photo_from_album_view' photo.pk %}" method="post" class="form">
 {% csrf_token %}
 {% bootstrap_form form %}
