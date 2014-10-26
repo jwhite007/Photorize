@@ -1,9 +1,21 @@
 {% extends 'photorizer/base.html' %}
-
+{% block dropdown %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">ACTIONS<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="{% url 'photorizer.views.delete_photo_view' photo.pk %}">Delete Photo</a></li>
+            <li><a href="{% url 'photorizer.views.add_photo_to_album_view' photo.pk %}">Add Photo to an Album</a></li>
+            <li><a href="{% url 'photorizer.views.remove_photo_from_album_view' photo.pk %}">Remove Photo from an Album</a></li>
+            <li><a href="{% url 'photorizer.views.edit_photo_view' photo.pk %}">Edit Photo</a></li>
+        </ul>
+    </li>
+{% endblock %}
 {% block content %}
-<div>
-    <p> Name: {{ photo.name }} </p>
-    <p> Caption: {{ photo.caption }} </p>
+<div class="photo">
+    <p> {{ photo.name }} </p>
+    <p> {{ photo.caption }} </p>
+    <p>Click on image to go back</p>
+    <p><a href="{{ back }}"><img src="{{  photo.image.url }}"></a></p>
     <p> Tags:
         {% if photo.tags.all %}
             {% for tag in photo.tags.all %}
@@ -17,13 +29,5 @@
             No tags assigned to this photo
         {% endif %}
     </p>
-    <p>
-    <a href="{% url 'photorizer.views.delete_photo_view' photo.pk %}"><button type="button" class="btn btn-success btn-xs">Delete Photo</button></a>
-    <a href="{% url 'photorizer.views.add_photo_to_album_view' photo.pk %}"><button type="button" class="btn btn-primary btn-xs">Add Photo to an Album</button></a>
-    <a href="{% url 'photorizer.views.remove_photo_from_album_view' photo.pk %}"><button type="button" class="btn btn-primary btn-xs">Remove Photo from an Album</button></a>
-    <a href="{% url 'photorizer.views.edit_photo_view' photo.pk %}"><button type="button" class="btn btn-primary btn-xs">Edit Photo</button></a>
-    </p>
-    <p>Click on image to go back</p>
-    <p><a href="{{ back }}"><img src="{{  photo.image.url }}"></a></p>
 </div>
 {% endblock %}
