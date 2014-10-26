@@ -112,7 +112,7 @@ class Base(Configuration):
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': 'photorizedb',
             'USER': 'photorizer',
-            'PASSWORD': 'xxxx',
+            'PASSWORD': 'photorize',
             'HOST': 'localhost',
             # 'ENGINE': 'django.db.backends.sqlite3',
             # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
