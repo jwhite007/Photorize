@@ -1,20 +1,52 @@
 <!DOCTYPE html>
 {% load bootstrap3 %}
-
-{# Load CSS and JavaScript #}
+<!-- {% load staticfiles %} -->
 
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+
 <html lang="en">
     <head>
     </head>
     <body>
+        <nav class="navbar navbar-custom" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Photorizer</a>
+            </div>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="{% url 'photorizer.views.main_view' %}">HOME</a>
+                    </li>
+                    {% if not user.is_authenticated %}
+                    <li>
+                        <a href="/accounts/signup/">REGISTER</a>
+                    </li>
+                    <li>
+                        <a href="/accounts/login/">LOGIN</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li>
+                    <a href="{% url 'logout' %}">LOGOUT</a>
+                    </li>
+                    {% block dropdown %}{% endblock %}
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
 
-    {% include "photorizer/nav.html" %}
+    {# {% include "photorizer/nav.html" %} #}
 
-        <div>
         {% block content %}{% endblock %}
-        </div>
+
     </body>
 
 </html>
