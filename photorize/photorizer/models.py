@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User, Group
-from registration.signals import user_activated
+from django.contrib.auth.models import User, Group, Permission
+from allauth.account.signals import email_confirmed
 from django.dispatch import receiver
 
 # class PublicAlbumsManager(models.Manager):
@@ -71,8 +71,17 @@ class Album(models.Model):
         return u'%s ' % (self.name)
 
 
-@receiver(user_activated)
+@receiver(email_confirmed)
 def add_to_active(sender, **kwargs):
-    auths = Group.objects.get(name='Active')
-    auths.user_set.add(kwargs['user'])
-
+    user = kwargs['email_address'].user
+    grp, created = Group.objects.get_or_create(name='Active')
+    if created is True:
+        # pset = Permission.objects.filter(pk__range=(22, 30))
+        pnames = ['Can add tag', 'Can change tag', 'Can delete tag',
+                  'Can add photo', 'Can change photo', 'Can delete photo',
+                  'Can add album', 'Can change album', 'Can delete album']
+        for pname in pnames:
+            perm = Permission.objects.get(name=pname)
+            grp.permissions.add(perm)
+    # grp.user_set.add(user)
+    user.groups.add(grp)
