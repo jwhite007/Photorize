@@ -1,28 +1,34 @@
 from django.shortcuts import render_to_response, \
-    render, redirect, get_object_or_404
-from django.http import Http404
+    render, redirect, get_object_or_404, get_list_or_404
+# from django.http import Http404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from models import Photo, Album, Tag
 from django.template import RequestContext, loader
 from django.contrib.auth.models import User
-from forms import CreateAlbumForm, \
-    PhotoForm, AddtoAlbumForm, RemoveFromAlbumForm, \
-    CreateTagForm, DeleteTagForm, EditPhotoForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, permission_required
 from django import forms
+from models import Photo, Album, Tag
+from forms import CreateAlbumForm, \
+    PhotoForm, AddtoAlbumForm, RemoveFromAlbumForm, \
+    CreateTagForm, DeleteTagForm, EditPhotoForm
 
 
 def main_view(request):
     if request.user.is_authenticated():
         user_name = request.user.username
-        try:
-            albums = (Album.objects.filter(
-                owner__username=user_name).order_by('name'))
-            # sorted_albums = albums.order_by('-created')
-        except User.DoesNotExist:
-            raise Http404
+        # try:
+        #     albums = (Album.objects.filter(
+        #         owner__username=user_name).order_by('name'))
+        #     # sorted_albums = albums.order_by('-created')
+        # except User.DoesNotExist:
+        #     raise Http404
+
+        albums = (Album.objects.filter(
+            owner__username=user_name).order_by('name'))
+
+        # albums = get_list_or_404(Album, owner__username=user_name)
+
         context = {'albums': albums, 'username': user_name}
         return render(request, 'photorizer/albums.html', context)
     else:
@@ -31,10 +37,11 @@ def main_view(request):
 
 @login_required
 def album_view(request, album_id):
-    try:
-        album = Album.objects.select_related('photos').get(pk=album_id)
-    except Album.DoesNotExist:
-        raise Http404
+    # try:
+    #     album = Album.objects.select_related('photos').get(pk=album_id)
+    # except Album.DoesNotExist:
+    #     raise Http404
+    album = get_object_or_404(Album.objects.select_related('photos'), pk=album_id)
     if album.owner_id == request.user.id:
         context = {'album': album, 'username': request.user.username}
         return render(request, 'photorizer/album.html', context)
@@ -61,10 +68,11 @@ def create_album_view(request):
 @login_required
 @permission_required('photorizer.change_album', raise_exception=True)
 def edit_album_view(request, album_id):
-    try:
-        album = Album.objects.get(pk=album_id)
-    except Album.DoesNotExist:
-        raise Http404
+    # try:
+    #     album = Album.objects.get(pk=album_id)
+    # except Album.DoesNotExist:
+    #     raise Http404
+    album = get_object_or_404(Album, pk=album_id)
     if album.owner_id == request.user.id:
         if request.method == 'POST':
             form = CreateAlbumForm(request.POST)
@@ -84,10 +92,11 @@ def edit_album_view(request, album_id):
 @login_required
 @permission_required('photorizer.delete_album', raise_exception=True)
 def delete_album_view(request, album_id):
-    try:
-        album = Album.objects.get(pk=album_id)
-    except Album.DoesNotExist:
-        raise Http404
+    # try:
+    #     album = Album.objects.get(pk=album_id)
+    # except Album.DoesNotExist:
+    #     raise Http404
+    album = get_object_or_404(Album, pk=album_id)
     if album.owner_id == request.user.id:
         album.delete()
         return HttpResponseRedirect('/main')
@@ -104,10 +113,11 @@ def photos_view(request):
 
 @login_required
 def photo_view(request, photo_id):
-    try:
-        photo = Photo.objects.get(pk=photo_id)
-    except Photo.DoesNotExist:
-        raise Http404
+    # try:
+    #     photo = Photo.objects.get(pk=photo_id)
+    # except Photo.DoesNotExist:
+    #     raise Http404
+    photo = get_object_or_404(Photo, pk=photo_id)
     if photo.owner_id == request.user.id:
         back = request.META.get('HTTP_REFERER')
         photo = Photo.objects.get(id=photo_id)
@@ -174,10 +184,11 @@ def add_photo_view(request):
 @login_required
 @permission_required('photorizer.change_photo', raise_exception=True)
 def edit_photo_view(request, photo_id):
-    try:
-        photo = Photo.objects.get(pk=photo_id)
-    except Photo.DoesNotExist:
-        raise Http404
+    # try:
+    #     photo = Photo.objects.get(pk=photo_id)
+    # except Photo.DoesNotExist:
+    #     raise Http404
+    photo = get_object_or_404(Photo, pk=photo_id)
     if photo.owner_id == request.user.id:
         form = EditPhotoForm(request.POST or None, instance=photo)
         if form.is_valid():
@@ -234,10 +245,11 @@ def edit_photo_view(request, photo_id):
 @login_required
 @permission_required('photorizer.delete_photo', raise_exception=True)
 def delete_photo_view(request, photo_id):
-    try:
-        photo = Photo.objects.get(pk=photo_id)
-    except Photo.DoesNotExist:
-        raise Http404
+    # try:
+    #     photo = Photo.objects.get(pk=photo_id)
+    # except Photo.DoesNotExist:
+    #     raise Http404
+    photo = get_object_or_404(Photo, pk=photo_id)
     if photo.owner_id == request.user.id:
         photo.delete()
         return HttpResponseRedirect('/photos')
