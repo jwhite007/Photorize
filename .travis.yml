@@ -7,7 +7,7 @@ install:
 services:
   - postgresql
 env:
-  - Django==1.6 DB=postgres
+  - Django==1.7 DB=postgres
 before_script:
   - psql -U postgres -c "CREATE USER photorizer WITH PASSWORD 'photorize' SUPERUSER;"
   - createdb photorizedb
