@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, url
 from django.contrib.auth.views import login, logout
 from photorizer import views
-from forms import LoginForm
 
 urlpatterns = patterns('photorizer.views',  # prefix allows you to refer to views by the simple function name.
                        url(r'^photo/(\d+)/$', 'photo_view'),
@@ -29,9 +28,8 @@ urlpatterns = patterns('photorizer.views',  # prefix allows you to refer to view
                        url(r'^tags/$', 'tags_view', name="tags"),
                        url(r'^tag/(\d+)/$', 'tag_view', name='tag'),
                        )
+
 urlpatterns += patterns('django.contrib.auth.views',
-                        url(r'^login/$', 'login', {'template_name':
-                            'registration/login.html'}, name='login'),
                         url(r'^logout/$', 'logout', {'next_page':
                             'photorizer.views.main_view'}, name='logout'),
                         )
