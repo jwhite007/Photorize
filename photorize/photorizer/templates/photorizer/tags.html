@@ -1,6 +1,15 @@
 {% extends 'photorizer/base.html' %}
 {% load thumbnail %}
 {% block content %}
+{% block dropdown %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">ACTIONS<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="{% url 'photorizer.views.add_tag_view' %}">Add Category</a></li>
+            <li><a href="{% url 'photorizer.views.delete_tag_view' %}">Delete Category</a></li>
+        </ul>
+    </li>
+{% endblock %}
 <div>
     {% for photo in photos %}
     <a>
