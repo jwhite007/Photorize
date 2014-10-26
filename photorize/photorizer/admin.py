@@ -31,7 +31,7 @@ class AlbumAdmin(admin.ModelAdmin):
     owner_link.allow_tags = True
     owner_link.short_description = "Owner"
 
-
+admin.AdminSite.site_header = 'Photorizer Administration'
 admin.site.register(Photo, PhotoAdmin)
 admin.site.register(Album, AlbumAdmin)
 admin.site.register(Tag)
