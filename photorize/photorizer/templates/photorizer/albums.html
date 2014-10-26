@@ -2,11 +2,18 @@
 {# {% url 'album' as albumpage %}
 {% url 'homepage' as main %} #}
 {% load thumbnail %}
+{% block dropdown %}
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">ACTIONS<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      <li><a href="{% url 'photorizer.views.create_album_view' %}">Add Album</a></li>
+      <li><a href="{% url 'photorizer.views.photos_view' %}">View All Photos</a></li>
+      <li><a href="{% url 'photorizer.views.add_photo_view' %}">Add Photo</a></li>
+      <li><a href="{% url 'photorizer.views.tags_view' %}">View Categories</a></li>
+    </ul>
+  </li>
+{% endblock %}
 {% block content %}
-<a href="{% url 'photorizer.views.create_album_view' %}"><button type="button" class="btn btn-primary">Add Album</button></a>
-<a href="{% url 'photorizer.views.photos_view' %}"><button type="button" class="btn btn-primary">View All Photos</button></a>
-<a href="{% url 'photorizer.views.add_photo_view' %}"><button type="button" class="btn btn-primary">Add Photo</button></a>
-<a href="{% url 'photorizer.views.tags_view' %}"><button type="button" class="btn btn-primary">View Categories</button></a>
 <div class="panel panel-info">
   <div class="panel-heading">
     <h3 class="panel-title">{{ username }}'s Photo Albums:</h3>
@@ -21,12 +28,23 @@
   <tbody>
   {% for album in albums %}
     <tr>
-      <td><a href="{% url 'photorizer.views.album_view' album.pk %}">{{ album }}</a></td>
-      <td>{% thumbnail album.photos.first.image "150x150" crop="center" as im %}
-      <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-      {% endthumbnail %}</td>
-      <td><a href="{% url 'photorizer.views.delete_album_view' album.pk %}"><button type="button" class="btn btn-success btn-xs">Delete Album</button></a></td>
-      <td><a href="{% url 'photorizer.views.edit_album_view' album.pk %}"><button type="button" class="btn btn-success btn-xs">Change Album Name</button></a></td>
+      <td>
+        <div class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ album }}<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="{% url 'photorizer.views.album_view' album.pk %}">Go To Album</a></li>
+            <li><a href="{% url 'photorizer.views.delete_album_view' album.pk %}">Delete Album</a></li>
+            <li><a href="{% url 'photorizer.views.edit_album_view' album.pk %}">Change Album Name</a></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a href="{% url 'photorizer.views.album_view' album.pk %}">{% thumbnail album.photos.first.image "150x150" crop="center" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        {% endthumbnail %}
+      </td>
     </tr>
   {% endfor %}
   </tbody>
