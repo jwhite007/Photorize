@@ -21,6 +21,11 @@ class CreateAlbumForm(forms.Form):
 
 
 class PhotoForm(ModelForm):
+    def __init__(self, current_user, *args, **kwargs):
+        super(PhotoForm, self).__init__(*args, **kwargs)
+        self.fields['tags'].queryset = self.fields['tags'].queryset.filter(owner_id=current_user.id)
+        self.fields['tags'].label = 'Select a Category'
+
     tag = forms.CharField(max_length=50, required=False, label='Add Category')
 
     class Meta:
@@ -31,12 +36,13 @@ class PhotoForm(ModelForm):
             'tags':  forms.CheckboxSelectMultiple()
         }
 
-    def __init__(self, *args, **kwargs):
-        super(PhotoForm, self).__init__(*args, **kwargs)
-        self.fields['tags'].label = 'Select a Category'
-
 
 class EditPhotoForm(ModelForm):
+    def __init__(self, current_user, *args, **kwargs):
+        super(EditPhotoForm, self).__init__(*args, **kwargs)
+        self.fields['tags'].queryset = self.fields['tags'].queryset.filter(owner_id=current_user.id)
+        self.fields['tags'].label = 'Select or Deselect a Category'
+
     tag = forms.CharField(max_length=50, required=False, label='Add a Category')
 
     class Meta:
@@ -46,10 +52,6 @@ class EditPhotoForm(ModelForm):
         widgets = {
             'tags':  forms.CheckboxSelectMultiple()
         }
-
-    def __init__(self, *args, **kwargs):
-        super(EditPhotoForm, self).__init__(*args, **kwargs)
-        self.fields['tags'].label = 'Select or Deselect a Category'
 
 
 class CreateTagForm(forms.Form):
@@ -66,6 +68,17 @@ class RemoveFromAlbumForm(forms.Form):
                                             widget=forms.CheckboxSelectMultiple())
 
 
+# class DeleteTagForm(forms.Form):
+#     tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
+#                                             widget=forms.CheckboxSelectMultiple())
+
+
 class DeleteTagForm(forms.Form):
-    tags = forms.ModelMultipleChoiceField(queryset=Tag.objects.all(),
-                                            widget=forms.CheckboxSelectMultiple())
+    def __init__(self, current_user, *args, **kwargs):
+        super(DeleteTagForm, self).__init__(*args, **kwargs)
+        self.fields['tags'].queryset = Tag.objects.filter(owner_id=current_user.id)
+        self.fields['tags'].label = 'Categories'
+
+    tags = forms.ModelMultipleChoiceField(
+        queryset=None,
+        widget=forms.CheckboxSelectMultiple)
