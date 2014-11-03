@@ -14,6 +14,11 @@ from django.dispatch import receiver
 class Tag(models.Model):
     """docstring for Tag"""
     name = models.CharField(max_length=50)
+    owner = models.ForeignKey(
+        User,
+        related_name='tags',
+        related_query_name='tag',
+    )
 
     def __unicode__(self):
         return u'%s ' % (self.name)
