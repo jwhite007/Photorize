@@ -62,7 +62,7 @@ def create_album_view(request):
             return HttpResponseRedirect('/main')
     else:
         form = CreateAlbumForm()
-    return render(request, 'photorizer/create_album.html', {'form': form})
+        return render(request, 'photorizer/create_album.html', {'form': form})
 
 
 @login_required
@@ -83,8 +83,8 @@ def edit_album_view(request, album_id):
                 return HttpResponseRedirect('/main')
         else:
             form = CreateAlbumForm(initial={'name': album.name})
-        return render(request, 'photorizer/edit_album.html',
-                      {'form': form, 'album': album})
+            return render(request, 'photorizer/edit_album.html',
+                          {'form': form, 'album': album})
     else:
         return render(request, 'photorizer/permission_denied.html')
 
@@ -135,7 +135,7 @@ def photo_view(request, photo_id):
 @permission_required('photorizer.add_photo', raise_exception=True)
 def add_photo_view(request):
     if request.method == 'POST':
-        form = PhotoForm(request.POST, request.FILES)
+        form = PhotoForm(request.user, request.FILES, data=request.POST)
         if form.is_valid():
             photo = form.save(commit=False)
             photo.owner = request.user
@@ -144,13 +144,13 @@ def add_photo_view(request):
                 photo.tags.add(tag)
             photo.save()
             if form.cleaned_data['tag']:
-                tag = Tag(name=form.cleaned_data['tag'])
+                tag = Tag(name=form.cleaned_data['tag'], owner=request.user)
                 tag.save()
                 photo.tags.add(tag)
                 photo.save()
             return HttpResponseRedirect('/photos')
     else:
-        form = PhotoForm()
+        form = PhotoForm(current_user=request.user)
     return render(request, 'photorizer/add_photo.html', {'form': form})
 
 # @login_required
@@ -190,19 +190,25 @@ def edit_photo_view(request, photo_id):
     #     raise Http404
     photo = get_object_or_404(Photo, pk=photo_id)
     if photo.owner_id == request.user.id:
-        form = EditPhotoForm(request.POST or None, instance=photo)
-        if form.is_valid():
-            photo = form.save()
-            if form.cleaned_data['tag']:
-                tag = Tag(name=form.cleaned_data['tag'])
-                tag.save()
-                photo.tags.add(tag)
-                photo.save()
-            else:
-                form.save()
-            return redirect('photorizer.views.photo_view', photo.id)
-        return render(request, 'photorizer/edit_photo.html',
-                      {'form': form, 'photo': photo})
+        if request.method == 'POST':
+            form = EditPhotoForm(request.user, data=request.POST or None, instance=photo)
+            if form.is_valid():
+                photo = form.save()
+                if form.cleaned_data['tag']:
+                    tag = Tag(name=form.cleaned_data['tag'])
+                    tag.save()
+                    photo.tags.add(tag)
+                    photo.save()
+                else:
+                    form.save()
+                return redirect('photorizer.views.photo_view', photo.id)
+        else:
+            form = EditPhotoForm(instance=photo, current_user=request.user)
+            context = {'form': form, 'photo': photo}
+            # return render(request, 'photorizer/edit_photo.html',
+            #               {'form': form, 'photo': photo})
+            return render(request, 'photorizer/edit_photo.html',
+                          context)
     else:
         return render(request, 'photorizer/permission_denied.html')
 
@@ -326,7 +332,7 @@ def add_tag_view(request):
         form = CreateTagForm(request.POST)
         if form.is_valid():
             tag_name = form.cleaned_data['name']
-            tag = Tag(name=tag_name)
+            tag = Tag(name=tag_name, owner=request.user)
             tag.save()
         return redirect('photorizer.views.photos_view')
     else:
@@ -334,17 +340,31 @@ def add_tag_view(request):
     return render(request, 'photorizer/add_tag.html', {'form': form})
 
 
+# @login_required
+# @permission_required('photorizer.delete_tag', raise_exception=True)
+# def delete_tag_view(request):
+#     user = request.user
+#     if request.method == 'POST':
+#         form = DeleteTagForm(request.POST)
+#         if form.is_valid():
+#             for tag in form.cleaned_data['tags']:
+#                 tag.delete()
+#         return HttpResponseRedirect('/main')
+#     else:
+#         form = DeleteTagForm()
+#         form.fields['tags'] = forms.ModelChoiceField(Tag.objects.filter(photo__owner=user).distinct(), widget=forms.CheckboxSelectMultiple())
+#     return render(request, 'photorizer/delete_tag.html', {'form': form})
+
 @login_required
 @permission_required('photorizer.delete_tag', raise_exception=True)
 def delete_tag_view(request):
-    user = request.user
     if request.method == 'POST':
-        form = DeleteTagForm(request.POST)
+        form = DeleteTagForm(request.user, data=request.POST)
         if form.is_valid():
-            for tag in form.cleaned_data['tags']:
+            for tag in form.cleaned_data['names']:
                 tag.delete()
         return HttpResponseRedirect('/main')
     else:
-        form = DeleteTagForm()
-        form.fields['tags'] = forms.ModelChoiceField(Tag.objects.filter(photo__owner=user).distinct(), widget=forms.CheckboxSelectMultiple())
-    return render(request, 'photorizer/delete_tag.html', {'form': form})
+        # tags = (Tag.objects.filter(owner_id=request.user.id).order_by('name'))
+        context = {'form': DeleteTagForm(current_user=request.user)}
+        return render(request, 'photorizer/delete_tag.html', context)
