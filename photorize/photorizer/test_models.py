@@ -41,7 +41,7 @@ class PhotoTest(TestCase):
                            caption='testing')
         self.photo.clean()
         self.photo.save()
-        self.tag = Tag(name='test tag')
+        self.tag = Tag(name='test tag', owner=self.user)
         self.tag.clean()
         self.tag.save()
         self.photo.tags.add(self.tag)
